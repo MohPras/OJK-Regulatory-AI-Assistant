@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OJK Regulatory AI Assistant - RAG RegTech OJK</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <div class="brand-icon">🏛️</div>
+                    <div class="brand-info">
+                        <h2>OJK Regulatory AI</h2>
+                        <span>RAG • RegTech OJK</span>
+                    </div>
+                </div>
+                <button class="icon-btn mobile-only" id="closeSidebarBtn" aria-label="Tutup Sidebar">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <button class="btn btn-primary new-chat-btn" id="newChatBtn">
+                <i data-lucide="plus"></i>
+                <span>Sesi Baru</span>
+            </button>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Riwayat Analisis</span>
+                    <ul class="history-list" id="historyList">
+                        </ul>
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Menu Utama</span>
+                    <ul class="nav-menu">
+                        <li class="nav-item" id="navKnowledgeBase">
+                            <i data-lucide="database"></i>
+                            <span>Database Peraturan (POJK/SEOJK)</span>
+                        </li>
+                        <li class="nav-item" id="navAbout">
+                            <i data-lucide="info"></i>
+                            <span>Tentang Sistem</span>
+                        </li>
+                        <li class="nav-item" id="navSettings">
+                            <i data-lucide="settings"></i>
+                            <span>Pengaturan Parameter</span>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="status-card">
+                    <div class="status-item">
+                        <span class="status-label">Knowledge Base</span>
+                        <span class="status-badge status-active"><span class="dot"></span> Regulasi OJK</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">RAG Engine</span>
+                        <span class="status-badge status-active"><span class="dot"></span> FAISS Active</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">LLM</span>
+                        <span class="status-badge status-active"><span class="dot"></span> Gemini</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="icon-btn mobile-only" id="toggleSidebarBtn" aria-label="Buka Sidebar">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="header-title">
+                        <h1>OJK Regulatory AI Assistant</h1>
+                        <p>Asisten AI untuk Analisis & Pencarian Regulasi Sektor Jasa Keuangan (OJK RI)</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="rag-badge">
+                        <i data-lucide="shield-check"></i>
+                        <span>RegTech RAG Active</span>
+                    </div>
+                    <button class="icon-btn" id="headerSettingsBtn" aria-label="Pengaturan">
+                        <i data-lucide="sliders"></i>
+                    </button>
+                    <div class="user-avatar" title="Analis Regulasi / Compliance">
+                        <i data-lucide="user"></i>
+                    </div>
+                </div>
+            </header>
+
+            <div class="chat-container" id="chatContainer">
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-badge">RegTech RAG Legal Knowledge Base</div>
+                    <h2>Selamat Datang di OJK Regulatory AI</h2>
+                    <p class="welcome-desc">
+                        Cari dan analisis peraturan <strong>POJK, SEOJK, UU PPSK, dan UU Perbankan/Pasar Modal</strong>. Sistem menggunakan pendekatan <strong>Retrieval-Augmented Generation (RAG)</strong> untuk memberikan jawaban presisi berbasis kutipan hukum resmi.
+                    </p>
+                    <div class="disclaimer-box">
+                        <i data-lucide="alert-triangle"></i>
+                        <span>Hasil analisis berdasarkan pencarian dokumen regulasi terindeks dan ditujukan sebagai alat bantu kepatuhan (compliance tool).</span>
+                    </div>
+                    
+                    <div class="suggestions-container">
+                        <h3>Saran Pertanyaan / Kueri Regulasi:</h3>
+                        <div class="suggestions-grid">
+                            <button class="suggestion-card" data-query="Bagaimana ketentuan modal disetor minimum untuk Bank Umum menurut POJK terbaru?">
+                                <i data-lucide="file-text"></i>
+                                <span>Modal Minimum Bank Umum (POJK)</span>
+                            </button>
+                            <button class="suggestion-card" data-query="Apa saja persyaratan perlindungan konsumen dan masyarakat oleh PJK sesuai POJK Nomor 6/POJK.07/2022?">
+                                <i data-lucide="shield"></i>
+                                <span>Perhitungan & Kewajiban Perlindungan Konsumen</span>
+                            </button>
+                            <button class="suggestion-card" data-query="Bagaimana aturan kewajiban penerapan Tata Kelola yang Baik (GCG) bagi Perusahaan FinTech P2P Lending?">
+                                <i data-lucide="scale"></i>
+                                <span>Tata Kelola FinTech P2P Lending</span>
+                            </button>
+                            <button class="suggestion-card" data-query="Sebutkan sanksi administratif bagi Penyelenggara Inovasi Teknologi Sektor Keuangan (ITSK) yang melanggar batas regulasi Sandbox!">
+                                <i data-lucide="alert-circle"></i>
+                                <span>Sanksi Pelanggaran Sandbox ITSK</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="messages-list" id="messagesList"></div>
+            </div>
+
+            <div class="chat-input-container">
+                <form id="chatForm" class="chat-form">
+                    <textarea id="chatInput" placeholder="Tanyakan seputar pasal POJK, SEOJK, atau regulasi OJK..." rows="1"></textarea>
+                    <button type="submit" id="sendBtn" class="send-btn" aria-label="Kirim Pesan">
+                        <i data-lucide="send"></i>
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" id="modalKnowledgeBase">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Database Peraturan OJK</h3>
+                <button class="icon-btn closeModal"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Dokumen regulasi berikut telah diindeks ke dalam FAISS Vector Store:</p>
+                <ul class="kb-list">
+                    <li>📄 <strong>POJK No. 12 /POJK.03/2021</strong> - Konsolidasi Bank Umum</li>
+                    <li>📄 <strong>POJK No. 6 /POJK.07/2022</strong> - Perlindungan Konsumen dan Masyarakat</li>
+                    <li>📄 <strong>POJK No. 10 /POJK.05/2022</strong> - Layanan Pendanaan Bersama Berbasis Teknologi Informasi (LPBBTI)</li>
+                    <li>📄 <strong>POJK No. 3 /POJK.02/2024</strong> - Penyelenggaraan Inovasi Teknologi Sektor Keuangan (ITSK)</li>
+                    <li>📄 <strong>SEOJK No. 19/SEOJK.06/2023</strong> - Tata Cara Penyelenggaraan LPBBTI</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalAbout">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Tentang OJK Regulatory AI</h3>
+                <button class="icon-btn closeModal"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Sistem ini merupakan platform RegTech RAG (Retrieval-Augmented Generation) yang dirancang untuk membantu divisi Kepatuhan (Compliance), Legal, dan Analis Kebijakan dalam menavigasi regulasi Otoritas Jasa Keuangan RI.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalSettings">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Pengaturan Parameter RAG</h3>
+                <button class="icon-btn closeModal"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <label>Tema Antarmuka</label>
+                    <select id="settingTheme" class="setting-select">
+                        <option value="light" selected>Light Mode (Executive OJK Red)</option>
+                        <option value="dark">Dark Mode (Dark RegTech)</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label>Tingkat Detail Jawaban Legal</label>
+                    <select id="settingDetail" class="setting-select">
+                        <option value="concise">Concise (Ringkasan Pasal)</option>
+                        <option value="balanced" selected>Balanced (Standar Legal Context)</option>
+                        <option value="detailed">Detailed (Komprehensif dengan Penjelasan Ayat)</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label>Top-K Retrieval Documents (Pasal/Bab)</label>
+                    <select id="settingTopK" class="setting-select">
+                        <option value="3">Top-3 Chunks</option>
+                        <option value="5" selected>Top-5 Chunks (Rekomendasi)</option>
+                        <option value="10">Top-10 Chunks</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
